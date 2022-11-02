@@ -1,11 +1,13 @@
 #include "InvertedIndex.h"
 
+mutex mtx;
 void ThreadFile(std::map<std::string, std::vector<Entry>>& freq_dictionary, const string& textStrings, const int& number)
 {
     std::stringstream ss(textStrings);
     std::istream_iterator<std::string> begin(ss);
     std::istream_iterator<std::string> end;
     std::vector<std::string> vStrings(begin, end);
+    mtx.lock();
     for (int j = 0,  jm = vStrings.size(); j < jm; j++)
     {
         auto FreqDict = freq_dictionary.find(vStrings[j]);
@@ -38,18 +40,19 @@ void ThreadFile(std::map<std::string, std::vector<Entry>>& freq_dictionary, cons
             }
         }
     }
+    mtx.unlock();
 }
 
 void InvertedIndex::UpdateDocumentBase(std::vector<std::string> input_docs)
 {
     for (int i = 0, im = input_docs.size(); i < im; i++)
     {
-        thread thd(ThreadFile, ref(freq_dictionary), input_docs[i], i);
+        thread thd(ThreadFile, ref(freq_dictionary), ref(input_docs[i]), i);
         thd.join();
     }
 };
 
-std::vector<Entry> InvertedIndex::GetWordCount(const std::string& word)
+std::vector<Entry> InvertedIndex::GetWordCount(const std::string& word) const
 {
     std::vector<Entry> result{};
     auto it = freq_dictionary.find(word);

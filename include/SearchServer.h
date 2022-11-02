@@ -11,11 +11,11 @@ struct RelativeIndex {
 
 class SearchServer {
 public:
-SearchServer(InvertedIndex& idx) : _index(idx) { };
-std::vector<std::vector<RelativeIndex>> search(const
-std::vector<std::string>& queries_input);
-static std::vector <RelativeIndex> uniqueWords(multimap<float, int> sR);
-void setMaxResponses(int maxResponse);
+    SearchServer(InvertedIndex& idx) : _index(idx) { };
+    std::vector<std::vector<RelativeIndex>> search(const
+        std::vector<std::string>& queries_input) const;
+    std::vector <RelativeIndex> uniqueWords(multimap<float, int> sR) const;
+    void setMaxResponses(int maxResponse);
 
 private:
 	InvertedIndex _index;

@@ -11,26 +11,19 @@
 #include <set>
 #include <thread>
 #include "nlohmann/json.hpp"
+#include <mutex>
 
 using json = nlohmann::json;
 using namespace std;
-
-struct Conf
-{
-	int MaxRes;
-	string Name;
-	string Version;
-};
 
 class ConverterJSON
 {
 public:
 	ConverterJSON() = default;
 	std::vector<std::string> GetTextDocuments();
-    std::vector<string> GetRequests();
-	int GetResponsesLimit();
+    std::vector<string> GetRequests() const;
+	int GetResponsesLimit() const;
 	void putAnswers(std::vector<std::vector<std::pair<int, float>>>
-		answers);
-	Conf conf;
+		answers) const;
 };
 

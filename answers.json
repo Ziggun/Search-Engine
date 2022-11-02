@@ -1,29 +1,29 @@
 {
  "answers": {
-  "request001": {
+  "request_001": {
    "result": true,
    "revelance": [
     {
-     "docId": 0,
+     "docId": 7,
      "rank": 1.0
     },
     {
-     "docId": 1,
-     "rank": 0.5
-    }
-   ]
-  },
-  "request002": {
-   "result": true,
-   "revelance": [
-    {
-     "docId": 1,
+     "docId": 14,
      "rank": 1.0
+    },
+    {
+     "docId": 21,
+     "rank": 0.6669999957084656
+    },
+    {
+     "docId": 20,
+     "rank": 0.6669999957084656
+    },
+    {
+     "docId": 19,
+     "rank": 0.6669999957084656
     }
    ]
-  },
-  "request003": {
-   "result": false
   }
  }
 }

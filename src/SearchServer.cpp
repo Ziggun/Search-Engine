@@ -1,13 +1,13 @@
 #include "SearchServer.h"
 
-std::vector <RelativeIndex> SearchServer::uniqueWords(multimap<float,int> sR) {
+std::vector <RelativeIndex> SearchServer::uniqueWords(multimap<float,int> sR) const
+{
     std::vector<RelativeIndex> vRI;
     std::vector<float> Relevance;
     std::vector<vector<int>> Num;
     std::vector <int> vNum;
     int Iterator = 0;
     float f = 0.0f;
-
     for (auto s : sR)
     {
         if (Iterator> 0)
@@ -20,12 +20,12 @@ std::vector <RelativeIndex> SearchServer::uniqueWords(multimap<float,int> sR) {
             }
             vNum.push_back(s.second);
         }
-        else { Relevance.push_back(s.first);  vNum.push_back(s.second);
+        else {
+            Relevance.push_back(s.first);  vNum.push_back(s.second);
         }
         f = s.first;
         Iterator++;
     }
-
     Num.push_back(vNum);
     for (int j = Relevance.size() - 1; j > -1; j--)
     {
@@ -40,11 +40,13 @@ std::vector <RelativeIndex> SearchServer::uniqueWords(multimap<float,int> sR) {
     return vRI;
 };
 
-void SearchServer::setMaxResponses(int maxResponse) {
+void SearchServer::setMaxResponses(int maxResponse)
+{
     this->maxResponse = maxResponse;
 }
+
 std::vector<std::vector<RelativeIndex>> SearchServer::search(const
-                                                             std::vector<std::string>& queries_input)
+                                                             std::vector<std::string>& queries_input) const
 {
     std::vector<std::vector<std::string>> VecWords;
     std::vector<std::vector<RelativeIndex>> WordsRelative;

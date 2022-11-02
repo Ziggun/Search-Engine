@@ -5,7 +5,27 @@
     "max_responses": 5
   },
   "files": [
-    "B:/test.txt",
-    "B:/test2.txt"
+    "resources/test1.txt",
+	"resources/test2.txt",
+	"resources/test3.txt",
+	"resources/test4.txt",
+	"resources/test5.txt",
+	"resources/test6.txt",
+	"resources/test7.txt",
+	"resources/test8.txt",
+	"resources/test9.txt",
+	"resources/test10.txt",
+	"resources/test11.txt",
+	"resources/test12.txt",
+	"resources/test13.txt",
+	"resources/test14.txt",
+	"resources/test15.txt",
+	"resources/test16.txt",
+	"resources/test17.txt",
+	"resources/test18.txt",
+	"resources/test19.txt",
+	"resources/test20.txt",
+	"resources/test21.txt",
+	"resources/test22.txt"
   ]
 }

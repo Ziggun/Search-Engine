@@ -1,5 +1,9 @@
 #include "ConverterJSON.h"
 
+std::filesystem::path ConfigFile = "config.json";
+std::filesystem::path RequestFile = "request.json";
+const string AnswersFile = "answers.json";
+
 std::vector<std::string> ConverterJSON::GetTextDocuments()
 {
     std::fstream finConfig;
@@ -7,9 +11,9 @@ std::vector<std::string> ConverterJSON::GetTextDocuments()
     finConfig.exceptions(fstream::badbit | fstream::failbit);
     try
     {
-        finConfig.open("config.json");
+        finConfig.open(ConfigFile);
         finConfig >> dict;
-        cout << dict["config"]["name"] << endl;
+        cout << "Name of project : " << dict["config"]["name"] << endl;
     }
     catch (const std::exception& ex)
     {
@@ -19,28 +23,22 @@ std::vector<std::string> ConverterJSON::GetTextDocuments()
     std::vector<string> vec_res, vecFiles;
     string findWord;
     string Version = "0.1";
-    try
+    if(dict["config"]["name"] == nullptr) {
+        clog << "Invalid data in file Config.json" << endl;
+    } else
     {
-        conf.MaxRes = dict["config"]["max_responses"];
-        conf.Version = dict["config"]["version"];
-        conf.Name = dict["config"]["name"];
+        if(Version != dict["config"]["version"])
+        {
+            clog << "Config.json has incorrect file version\n" << endl;
+        }
+        vecFiles = dict["files"];
     }
-    catch (const std::exception& ex)
-    {
-        cout << ex.what() << endl;
-        cout << "config file is empty" << endl;
-    }
-    if(Version != conf.Version)
-    {
-       clog << "config.json has incorrect file version" << endl;
-    }
-    vecFiles = dict["files"];
-    for (auto file : vecFiles)
+    for (const auto &file : vecFiles)
     {
         ifstream in(file, std::ios::in);
         if (!in.good())
         {
-            std::clog << "Couldn't open file.\n";
+            std::clog << "Couldn't open file. Config.json [files][your files]\n";
         } else
         {
             string test = "";
@@ -58,43 +56,53 @@ std::vector<std::string> ConverterJSON::GetTextDocuments()
     return vec_res;
 };
 
-int ConverterJSON::GetResponsesLimit()  {
-    std::fstream test("config.json");
+int ConverterJSON::GetResponsesLimit() const
+{
+    std::fstream test(ConfigFile);
     nlohmann::json dict;
     test >> dict;
     test.close();
-    int Resp;
-    Resp = dict["config"]["max_responses"];
-    return Resp;
+    if (dict["config"]["max_responses"] < 1) {
+        std::clog << "The number of requests can't be less than 1 \n";
+        dict["config"]["max_responses"] = 5;
+    }
+        return dict["config"]["max_responses"];
 };
 
-std::vector<string> ConverterJSON::GetRequests()
+std::vector<string> ConverterJSON::GetRequests() const
 {
-    std::fstream req("request.json");
+    std::fstream req(RequestFile);
     nlohmann::json dict;
     req >> dict;
     req.close();
     std::vector<string> vecRequest;
     vecRequest = dict["requests"];
-    return  vecRequest;
+    return vecRequest;
 };
 
 void ConverterJSON::putAnswers(std::vector<std::vector<std::pair<int, float>>>
-                               answers)
+                               answers) const
 {
-    std::fstream ans("answers.json",ios::out);
+    std::fstream ans(AnswersFile,ios::out);
     if (!ans.good())
     {
-        clog << "Couldn't open file.\n";
+        clog << "Couldn't open file Answer.json.\n";
     } else
     {
-        ans.close();
-        std::fstream ans("answers.json");
         nlohmann::json dict;
         for (int i = 0; i < answers.size(); i++)
         {
             dict["answers"];
-            string a = "request00" + to_string(i+1);
+            string a = "request_00";
+            if(i < 9) {
+                a += to_string(i + 1);
+            } else  if (i < 99)
+            {
+                a = "request_0" + to_string(i + 1);
+            } else
+            {
+                a = "request_" + to_string(i + 1);
+            }
             dict["answers"][a];
             sort(answers[i].begin(), answers[i].end(),
                       [](const auto& x, const auto& y) { return x.second > y.second; });
@@ -115,4 +123,4 @@ void ConverterJSON::putAnswers(std::vector<std::vector<std::pair<int, float>>>
         ans << dict.dump(1);
         ans.close();
     }
-};
+}
