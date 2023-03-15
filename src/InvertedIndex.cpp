@@ -7,7 +7,7 @@ void ThreadFile(std::map<std::string, std::vector<Entry>>& freq_dictionary, cons
     std::istream_iterator<std::string> begin(ss);
     std::istream_iterator<std::string> end;
     std::vector<std::string> vStrings(begin, end);
-    mtx.lock();
+   
     for (int j = 0,  jm = vStrings.size(); j < jm; j++)
     {
         auto FreqDict = freq_dictionary.find(vStrings[j]);
@@ -18,7 +18,9 @@ void ThreadFile(std::map<std::string, std::vector<Entry>>& freq_dictionary, cons
             entry.doc_id = number;
             entry.count = 1;
             VEntry.push_back(entry);
+            mtx.lock();
             freq_dictionary.emplace(vStrings[j], VEntry);
+            mtx.unlock();
             FreqDict = freq_dictionary.find(vStrings[j]);
         } else
         {
@@ -40,7 +42,6 @@ void ThreadFile(std::map<std::string, std::vector<Entry>>& freq_dictionary, cons
             }
         }
     }
-    mtx.unlock();
 }
 
 void InvertedIndex::UpdateDocumentBase(std::vector<std::string> input_docs)
